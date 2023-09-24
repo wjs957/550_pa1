@@ -6,18 +6,18 @@ public class GenerateFiles {
     public static void main(String[] args) {
         ConfigReader config = new ConfigReader("test_config.properties");
         String directoryPath = config.getProperty("test.download.path");
-//        int numFiles = 1000000; // Generate 1 million 1K files
-        int numFiles = 100;
+        int numFiles = 1000000; // Generate 1 million 1K files
+//        int numFiles = 100;
         int fileSizeKB = 1024; // 1K
         generateFiles(directoryPath, "text_kb_%s.txt", numFiles, fileSizeKB);
 
-//        numFiles = 1000; // Generate 1000 1M files
-//        int fileSizeMB = 1024*1024; // 1M
-//        generateFiles(directoryPath, "text_mb_%s.txt", numFiles, fileSizeMB);
-//
-//        numFiles = 10; // Generate 10 1G files
-//        int fileSizeGB = 1024*1024*1024; // 1G
-//        generateFiles(directoryPath, "binary_gb_%s.bin", numFiles, fileSizeGB);
+        numFiles = 1000; // Generate 1000 1M files
+        int fileSizeMB = 1024*1024; // 1M
+        generateFiles(directoryPath, "text_mb_%s.txt", numFiles, fileSizeMB);
+
+        numFiles = 10; // Generate 10 1G files
+        int fileSizeGB = 1024*1024*1024; // 1G
+        generateFiles(directoryPath, "binary_gb_%s.bin", numFiles, fileSizeGB);
     }
 
     private static void generateFiles(String directoryPath, String fileNameFormat, int numFiles, int fileSizeInKB) {
