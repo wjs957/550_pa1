@@ -13,7 +13,7 @@ public class FileServer {
     public FileServer(int port) throws SocketException {
         this.commandSocket = new DatagramSocket(port);
         this.workerThreadPool = Executors.newFixedThreadPool(ConstantUtils.THREAD_POOL_SIZE);
-        LOGGER.info("\nThe file server is started successfully. port: " + port);
+        LOGGER.info("The file server is started successfully. port: " + port);
     }
 
     public void startFileServer() {
