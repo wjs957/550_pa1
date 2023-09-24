@@ -27,7 +27,7 @@ public class IndexServer {
         ServerSocket serverSocket = new ServerSocket(port);
         ExecutorService workerThreadPool = Executors.newFixedThreadPool(ConstantUtils.THREAD_POOL_SIZE);
         System.out.println("The index service is started successfully. port: "+ConstantUtils.INDEX_SERVER_PORT);
-        while (true) {
+        while(true) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 // 将客户端连接交给工作线程池处理
