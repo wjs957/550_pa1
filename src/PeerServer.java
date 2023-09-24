@@ -71,13 +71,12 @@ public class PeerServer {
                 System.out.println("The PEER has established a connection with server "+serverAddress+":"+serverPort+" .");
 
                 while (true) {
-                    //Show the user different choices
-                    System.out.println("\nWhat do you want to do?");
-                    System.out.println("1.Register files with indexing server.");
-                    System.out.println("2.Lookup for a file at index server.");
-                    System.out.println("3.Un-register all files of this peer from the indexing server.");
+                    System.out.println("\nPlease follow the prompts below to make your selection and enter the number!");
+                    System.out.println("1.Register all its files with the indexing serve.");
+                    System.out.println("2.Search the index and return all the matching.");
+                    System.out.println("3.Unregister all files for this peer from the index server.");
                     System.out.println("4.Exit.");
-                    System.out.print("Enter choice and press ENTER:");
+                    System.out.print("Only accepts numeric input:");
                     int option;
                     try {
                         option = Integer.parseInt(input.readLine());
