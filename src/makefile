@@ -12,5 +12,5 @@ start_indexserver:
 start_peer:
 	java -classpath ../out/production/550_pa1 PeerServer
 
-run_test:
+run_evaluation:
 	java -classpath ../out/production/550_pa1 TestClient
