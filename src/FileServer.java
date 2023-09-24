@@ -41,13 +41,15 @@ public class FileServer {
                 int sendStreamPort = Integer.parseInt(commands[1]);
                 String fileName = commands[2];
                 long fileSize = FileUtils.getFileSizeInBytes(fileName);
-                if (fileSize>0) {
+
+                if (fileSize>=0) {
                     outputDataBuffer = ("ACCEPT "+fileSize+" ").getBytes();
 
                     sendDatagram(outputDataBuffer, ipAddress, port);
                     TimeUnit.MILLISECONDS.sleep(200);
                     sendFileStream(ipAddress, sendStreamPort, fileName);
                 } else {
+                    System.err.println("get file error,fileName: "+fileName+" ,fileSize= "+fileSize);
                     outputDataBuffer = "FAILED".getBytes();
                     sendDatagram(outputDataBuffer, ipAddress, port);
                 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class FileReceiver {
 
-    public String receiveFile(String fileFullName,String fileName, String ipAddress, int sockPort) throws IOException {
+    public String receiveFile(String fileFullName,String fileName, String ipAddress, int sockPort,String targetDownloadPath) throws IOException {
         DatagramSocket commandSocket = null;
         ServerSocket fileStreamListener = null;
         Socket fileStreamSocket = null;
@@ -26,21 +26,25 @@ public class FileReceiver {
             String command = new String(Arrays.copyOf(inputPacket.getData(), inputPacket.getLength()));
 
             if (!command.startsWith("ACCEPT")) {
-                throw new IOException("Failed to obtain the " + fileName + " file from the server (" + ipAddress + ").");
+                throw new IOException("Failed to obtain the " + fileName + " file from the server (" + ipAddress + "). command:"+command);
             }
 
             String[] commands = command.split(" ");
 
             long fileSize = Long.parseLong(commands[1]);
+            File downloadFile = null;
+            if(targetDownloadPath==null){
+                Path downloadPath = FileUtils.getUserDownloadPath();
+                Path filePath = downloadPath.resolve(fileName);
+                downloadFile = filePath.toFile();
+            }else{
+                downloadFile = new File(targetDownloadPath+fileName);
+            }
 
-            Path downloadPath = FileUtils.getUserDownloadPath();
-            Path filePath = downloadPath.resolve(fileName);
 
             // Opening port for receiving file stream
-            fileStreamListener = new ServerSocket(ConstantUtils.FILE_BUFFER_SIZE);
+            fileStreamListener = new ServerSocket(ConstantUtils.FILE_STREAM_PORT);
             fileStreamSocket = fileStreamListener.accept();
-
-            File downloadFile = filePath.toFile();
 
             // Receiving Data Stream
             fileInputStream = new DataInputStream(new BufferedInputStream(fileStreamSocket.getInputStream()));
@@ -59,7 +63,7 @@ public class FileReceiver {
                 totalBytesRead += bytesRead;
                 // 计算并显示下载进度条
                 int progress = (int) ((totalBytesRead * 100) / fileSize);
-                displayProgressBar(progress);
+                displayProgressBar(fileName,progress);
             }
             System.out.print("\n");
             fileOutputStream.flush();
@@ -87,10 +91,10 @@ public class FileReceiver {
         }
     }
 
-    private void displayProgressBar(int progress) {
+    private void displayProgressBar(String fileName,int progress) {
         // The progress bar is displayed on the console,
         // and ANSI escape sequences can be used to move the cursor and clear lines
-        System.out.print("\rDownloading: [");
+        System.out.print("\rDownloading ("+fileName+"): [");
         for (int i = 0; i < 50; i++) {
             if (i < progress / 2) {
                 System.out.print("#");

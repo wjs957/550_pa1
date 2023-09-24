@@ -110,7 +110,7 @@ public class PeerServer {
                                 indexServerResponse = (IndexResponse) in.readObject();
 
                                 if (indexServerResponse.isSuc()) {
-                                    System.out.println((directoryEntity.getFileNames().size() - 1) + " files registered with indexing server. ");
+                                    System.out.println(directoryEntity.getFileNames().size() + " files registered with indexing server. ");
                                 } else {
                                     System.err.println("Unable to register files with server. Please try again later.");
                                 }
@@ -283,7 +283,7 @@ public class PeerServer {
         private String downloadFile(String fileHostAddress, Integer fileHostPort,String fileFullName,String fileName) throws Exception {
 
             FileReceiver fileReceiver = new FileReceiver();
-            return fileReceiver.receiveFile(fileFullName,fileName,fileHostAddress,fileHostPort);
+            return fileReceiver.receiveFile(fileFullName,fileName,fileHostAddress,fileHostPort,null);
         }
 
     }
