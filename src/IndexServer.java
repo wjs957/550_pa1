@@ -8,9 +8,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class IndexServer {
 
+    private static Logger LOGGER = Logger.getLogger(IndexServer.class.getName());
     private final ConcurrentMap<String,FilesStoreEntity> indexFilesStore = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, Set<String>> searchFilesMapping = new ConcurrentHashMap<>();
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -19,14 +23,37 @@ public class IndexServer {
 
     private static final String PEER_KEY_FORMAT = "peer_key_Id:%s_ip:%s";
 
+    private static void configureLogging() {
+        try {
+            // Set the log output format
+            System.setProperty("java.util.logging.SimpleFormatter.format",
+                    "[%1$tF %1$tT] [%4$-7s] %5$s %n");
+
+            // Create a log handler and output logs to a specified file
+            FileHandler fileHandler = new FileHandler("index_server.log");
+
+            // Set the output format of the log processor
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+
+            // Obtain the root Logger and add a file handler
+            Logger rootLogger = Logger.getLogger("");
+            rootLogger.addHandler(fileHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws IOException {
+        configureLogging();
         new IndexServer().startServer(ConstantUtils.INDEX_SERVER_PORT);
     }
 
     public void startServer(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
         ExecutorService workerThreadPool = Executors.newFixedThreadPool(ConstantUtils.THREAD_POOL_SIZE);
-        System.out.println("The index service is started successfully. port: "+ConstantUtils.INDEX_SERVER_PORT);
+
+        LOGGER.info("The index service is started successfully. port: "+ConstantUtils.INDEX_SERVER_PORT);
         while(true) {
             try {
                 Socket clientSocket = serverSocket.accept();
@@ -96,7 +123,7 @@ public class IndexServer {
                         break;
                     case DISCONNECT:
 
-                        System.out.println("The client has requested that the connection be closed");
+                        LOGGER.info("The client has requested that the connection be closed");
                         return ;
                     default:
                         this.writeFailedResult("Unrecognized request type,requestType:"+peerRequest.getRequestType(),outputStream);
@@ -104,14 +131,14 @@ public class IndexServer {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("server handleClient error,msg:"+e.getMessage());
+            LOGGER.info("server handleClient error,msg:"+e.getMessage());
             e.printStackTrace();
         }finally {
             if(clientSocket!=null && clientSocket.isConnected()){
                 try{
                     clientSocket.close();
                 }catch (IOException e){
-                    System.out.println("Couldn't close a socket.");
+                    LOGGER.info("Couldn't close a socket.");
                 }
 
             }
@@ -128,13 +155,13 @@ public class IndexServer {
         if(suc){
             out.writeObject(indexResponse);
         }else{
-            System.out.println(message);
+            LOGGER.info(message);
             out.writeObject(IndexResponse.failedResp(message));
         }
     }
 
     private IndexResponse register(IndexRequest.IndexRegister indexRegister, String peerAddress) {
-        System.out.println("Register path: "+indexRegister.getFilePath()+",files.size: "+ indexRegister.getFiles().size()+" from Peer(" + peerAddress+" ), peerId:"+indexRegister.getPeerId());
+        LOGGER.info("Register path: "+indexRegister.getFilePath()+",files.size: "+ indexRegister.getFiles().size()+" from Peer(" + peerAddress+" ), peerId:"+indexRegister.getPeerId());
 
         String peerKeyStr = String.format(PEER_KEY_FORMAT,indexRegister.getPeerId(), peerAddress);
         List<String> fileList;
@@ -199,13 +226,13 @@ public class IndexServer {
             }
 
         }catch (Exception e){
-            System.out.println("save files to indexFilesStore error,error:"+e.getMessage());
+            LOGGER.info("save files to indexFilesStore error,error:"+e.getMessage());
             return IndexResponse.failedResp("save files to indexFilesStore error,error:"+e.getMessage());
         }finally {
             wLock.unlock();
         }
 
-        System.out.println("The peer (ID:"+indexRegister.getPeerId()+", IP:"+peerAddress+") sent "+indexRegister.getFiles().size()+" files to the server. ");
+        LOGGER.info("The peer (ID:"+indexRegister.getPeerId()+", IP:"+peerAddress+") sent "+indexRegister.getFiles().size()+" files to the server. ");
 
         IndexResponse.ResultData resultData = new IndexResponse.ResultData();
         resultData.setPeerId(indexRegister.getPeerId());
@@ -221,21 +248,21 @@ public class IndexServer {
         wLock.lock();
         try{
             FilesStoreEntity filesStoreEntity = indexFilesStore.remove(peerKey);
-            System.out.println("indexFilesStore remove peerKey:"+ peerKey);
+            LOGGER.info("indexFilesStore remove peerKey:"+ peerKey);
             if(filesStoreEntity!=null){
                 for(Map.Entry<String,List<String>> entry: filesStoreEntity.getPathFilesMapping().entrySet()){
                     fileList = entry.getValue();
                     if(fileList!=null && fileList.size()>0){
                         for(String file:fileList){
                             searchFilesMapping.remove(file);
-                            System.out.println("searchFilesMapping remove item. path: "+entry.getKey()+" ,fileKey: "+ file);
+                            LOGGER.info("searchFilesMapping remove item. path: "+entry.getKey()+" ,fileKey: "+ file);
                         }
                     }
                 }
 
             }
         }catch (Exception e){
-            System.err.println("save files to indexFilesStore error,error:"+e.getMessage());
+            LOGGER.severe("save files to indexFilesStore error,error:"+e.getMessage());
             return IndexResponse.failedResp("save files to indexFilesStore error,error:"+e.getMessage());
         }finally {
             wLock.unlock();
@@ -245,13 +272,13 @@ public class IndexServer {
         return IndexResponse.sucResp(resultData);
     }
     private IndexResponse lookup(String fileName) {
-        System.out.println("lookup file "+fileName);
+        LOGGER.info("lookup file "+fileName);
 
         rLock.lock();
         try{
             Set<String> peerKeySet = this.searchFilesMapping.get(fileName);
             if(peerKeySet==null || peerKeySet.size()<1){
-                System.err.println("No file found, name:"+fileName);
+                LOGGER.severe("No file found, name:"+fileName);
                 return IndexResponse.failedResp("No file found, name:"+fileName);
             }
             IndexResponse.ResultData resultData = new IndexResponse.ResultData();
@@ -261,7 +288,7 @@ public class IndexServer {
             for(String peerKey:peerKeySet){
                 FilesStoreEntity filesStoreEntity = this.indexFilesStore.get(peerKey);
                 if(filesStoreEntity==null){
-                    System.err.println("Not found filesStoreEntity, name:"+fileName+" ,peerKey:"+peerKey);
+                    LOGGER.severe("Not found filesStoreEntity, name:"+fileName+" ,peerKey:"+peerKey);
                     continue;
                 }
 
@@ -289,7 +316,7 @@ public class IndexServer {
 
             return IndexResponse.sucResp(resultData);
         }catch (Exception e){
-            System.out.println("call lookup error,error:"+e.getMessage());
+            LOGGER.severe("call lookup error,error:"+e.getMessage());
             return IndexResponse.failedResp("call lookup error,error:"+e.getMessage());
         }finally {
             rLock.unlock();

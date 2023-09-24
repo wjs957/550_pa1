@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -20,17 +19,16 @@ public class EvaluationAndMeasurement {
         TYPE_LOG_MAP.put(1,"search_and_download_1M_1KB.log");
         TYPE_LOG_MAP.put(2,"search_and_download_1K_1MB.log");
         TYPE_LOG_MAP.put(3,"search_and_download_10_1GB.log");
-
     }
 
     private final Lock lock = new ReentrantLock();
 
     public static void main(String[] args) {
         EvaluationAndMeasurement evaluation = new EvaluationAndMeasurement();
-        evaluation.runQueries(0);
+//        evaluation.runQueries(0);
         evaluation.runQueries(1);
-        evaluation.runQueries(2);
-        evaluation.runQueries(3);
+//        evaluation.runQueries(2);
+//        evaluation.runQueries(3);
     }
 
     public void runQueries(int type) {

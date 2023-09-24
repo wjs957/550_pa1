@@ -2,12 +2,35 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class PeerServer {
 
+    private static Logger LOGGER = Logger.getLogger(PeerServer.class.getName());
+    private static void configureLogging() {
+        try {
+            // Set the log output format
+            System.setProperty("java.util.logging.SimpleFormatter.format",
+                    "[%1$tF %1$tT] [%4$-7s] %5$s %n");
 
+            // Create a log handler and output logs to a specified file
+            FileHandler fileHandler = new FileHandler("peer_server.log");
+
+            // Set the output format of the log processor
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+
+            // Obtain the root Logger and add a file handler
+            Logger rootLogger = Logger.getLogger("");
+            rootLogger.addHandler(fileHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) throws IOException {
-
+        configureLogging();
         String peerId = UUID.randomUUID().toString();
         Thread peerClientThread = new Thread(new PeerClient(peerId));
         peerClientThread.start();
