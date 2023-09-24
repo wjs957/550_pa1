@@ -20,7 +20,7 @@ public class FileServer {
     }
 
     public void startFileServer() {
-        while (true) {
+        while(true) {
             try {
                 byte[] inputDataBuffer = new byte[INPUT_BUFFER_SIZE];
                 DatagramPacket inputPacket = new DatagramPacket(inputDataBuffer, inputDataBuffer.length);
@@ -52,7 +52,7 @@ public class FileServer {
                     TimeUnit.MILLISECONDS.sleep(500);
                     sendFileStream(ipAddress, sendStreamPort, fileName);
                 } else {
-                    outputDataBuffer = "ERROR".getBytes();
+                    outputDataBuffer = "FAILED".getBytes();
                     sendDatagram(outputDataBuffer, ipAddress, port);
                 }
             }

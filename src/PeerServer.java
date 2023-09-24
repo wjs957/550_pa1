@@ -79,7 +79,6 @@ public class PeerServer {
                     System.out.println("4.Exit.");
                     System.out.print("Enter choice and press ENTER:");
                     int option;
-
                     try {
                         option = Integer.parseInt(input.readLine());
                     } catch (NumberFormatException e) {
@@ -252,9 +251,8 @@ public class PeerServer {
                             indexRequest = new IndexRequest();
                             indexRequest.setRequestType(RequestTypeEnum.DISCONNECT.getCode());
                             out.writeObject(indexRequest);
-                            System.out.println("Thanks for using this system.");
+                            System.out.println("System exit complete.");
                             return ;
-
                         default:
                             System.err.println("Incorrect selection, please try again!!!");
                             break;

@@ -53,7 +53,7 @@ public class FileReceiver {
             int bytesRead;
 
             long totalBytesRead = 0;
-            
+
             while (true) {
                 bytesRead = fileInputStream.read(fileBuffer);
                 if (bytesRead == -1) {
