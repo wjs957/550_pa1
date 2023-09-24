@@ -110,6 +110,13 @@ public class EvaluationAndMeasurement {
                     System.err.println("File retrieval failed, failure message: The host list is empty");
                 }
             }
+
+            //
+            indexRequest = new IndexRequest();
+            indexRequest.setRequestType(RequestTypeEnum.DISCONNECT.getCode());
+            out.writeObject(indexRequest);
+            System.out.println("System exit complete.");
+
         }catch (IOException | ClassNotFoundException e){
             e.printStackTrace();
         }finally {
