@@ -8,7 +8,7 @@ import java.util.logging.SimpleFormatter;
 
 public class PeerServer {
 
-    private static Logger LOGGER = Logger.getLogger(PeerServer.class.getName());
+//    private static Logger LOGGER = Logger.getLogger("peer_client");
     private static void configureLogging() {
         try {
             // Set the log output format
@@ -23,8 +23,14 @@ public class PeerServer {
             fileHandler.setFormatter(formatter);
 
             // Obtain the root Logger and add a file handler
-            Logger rootLogger = Logger.getLogger("");
+            Logger rootLogger = Logger.getLogger("peer_server");
             rootLogger.addHandler(fileHandler);
+
+
+//            FileHandler clientFileHandler = new FileHandler("peer_client.log");
+//            clientFileHandler.setFormatter(formatter);
+//            Logger clientLogger = Logger.getLogger("peer_client");
+//            clientLogger.addHandler(clientFileHandler);
         } catch (IOException e) {
             e.printStackTrace();
         }

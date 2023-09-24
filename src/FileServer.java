@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class FileServer {
-    private static Logger LOGGER = Logger.getLogger(FileServer.class.getName());
+    private static Logger LOGGER = Logger.getLogger("peer_server");
     private final DatagramSocket commandSocket;
     private final ExecutorService workerThreadPool;
 
