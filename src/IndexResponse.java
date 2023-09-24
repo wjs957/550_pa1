@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 public class IndexResponse implements Serializable {
     private boolean suc;
-    private String code;
     private String message;
     private ResultData data;
     public boolean isSuc() {
@@ -13,14 +12,6 @@ public class IndexResponse implements Serializable {
 
     public void setSuc(boolean suc) {
         this.suc = suc;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getMessage() {
@@ -129,7 +120,6 @@ public class IndexResponse implements Serializable {
     public static IndexResponse failedResp(String message){
         IndexResponse indexResponse = new IndexResponse();
         indexResponse.setSuc(false);
-        indexResponse.setCode("500");
         indexResponse.setMessage(message);
         return indexResponse;
     }
@@ -137,14 +127,12 @@ public class IndexResponse implements Serializable {
     public static IndexResponse sucResp(ResultData data){
         IndexResponse indexResponse = new IndexResponse();
         indexResponse.setSuc(true);
-        indexResponse.setCode("200");
         indexResponse.setData(data);
         return indexResponse;
     }
     public static IndexResponse sucResp(String message){
         IndexResponse indexResponse = new IndexResponse();
         indexResponse.setSuc(true);
-        indexResponse.setCode("200");
         indexResponse.setMessage(message);
         return indexResponse;
     }

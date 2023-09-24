@@ -6,23 +6,19 @@ import java.util.concurrent.TimeUnit;
 
 public class FileServer {
 
-    public static final int FILE_SERVER_DEFAULT_PORT=10000;
-
-    private static final int INPUT_BUFFER_SIZE = 4096;
-
     private final DatagramSocket commandSocket;
     private final ExecutorService workerThreadPool;
-    private static final int THREAD_POOL_SIZE = 1024;
+
     public FileServer(int port) throws SocketException {
         this.commandSocket = new DatagramSocket(port);
-        this.workerThreadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        this.workerThreadPool = Executors.newFixedThreadPool(ConstantUtils.THREAD_POOL_SIZE);
         System.out.println("\nThe file server is started successfully. port: " + port);
     }
 
     public void startFileServer() {
         while(true) {
             try {
-                byte[] inputDataBuffer = new byte[INPUT_BUFFER_SIZE];
+                byte[] inputDataBuffer = new byte[ConstantUtils.FILE_BUFFER_SIZE];
                 DatagramPacket inputPacket = new DatagramPacket(inputDataBuffer, inputDataBuffer.length);
                 commandSocket.receive(inputPacket);
                 // The client connection is handled by the worker thread pool
@@ -49,7 +45,7 @@ public class FileServer {
                     outputDataBuffer = ("ACCEPT "+fileSize+" ").getBytes();
 
                     sendDatagram(outputDataBuffer, ipAddress, port);
-                    TimeUnit.MILLISECONDS.sleep(500);
+                    TimeUnit.MILLISECONDS.sleep(200);
                     sendFileStream(ipAddress, sendStreamPort, fileName);
                 } else {
                     outputDataBuffer = "FAILED".getBytes();
@@ -82,7 +78,7 @@ public class FileServer {
             fileInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(fileName)));
             fileOutputStream = new DataOutputStream(clientFileSocket.getOutputStream());
 
-            byte[] fileBuffer = new byte[INPUT_BUFFER_SIZE];
+            byte[] fileBuffer = new byte[ConstantUtils.FILE_BUFFER_SIZE];
 
             int bytesRead;
 
