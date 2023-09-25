@@ -77,7 +77,7 @@ public class PeerServer {
                     System.exit(0);
                 }
 
-                System.out.print("Enter Server PORT (The default PORT is 9000):");
+                System.out.print("Enter Server PORT (The default PORT is 8080):");
                 String serverPort = input.readLine();
                 if(serverPort.trim().length() == 0 || "\n".equals(serverPort)) {
                     serverPort = String.valueOf(ConstantUtils.INDEX_SERVER_PORT);
