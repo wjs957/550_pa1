@@ -3,16 +3,17 @@ import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class FileServer {
-
+    private static Logger LOGGER = Logger.getLogger("peer_server");
     private final DatagramSocket commandSocket;
     private final ExecutorService workerThreadPool;
 
     public FileServer(int port) throws SocketException {
         this.commandSocket = new DatagramSocket(port);
         this.workerThreadPool = Executors.newFixedThreadPool(ConstantUtils.THREAD_POOL_SIZE);
-        System.out.println("\nThe file server is started successfully. port: " + port);
+        LOGGER.info("The file server is started successfully. port: " + port);
     }
 
     public void startFileServer() {
@@ -41,13 +42,15 @@ public class FileServer {
                 int sendStreamPort = Integer.parseInt(commands[1]);
                 String fileName = commands[2];
                 long fileSize = FileUtils.getFileSizeInBytes(fileName);
-                if (fileSize>0) {
-                    outputDataBuffer = ("ACCEPT "+fileSize+" ").getBytes();
 
+                if (fileSize>=0) {
+                    outputDataBuffer = ("ACCEPT "+fileSize+" ").getBytes();
                     sendDatagram(outputDataBuffer, ipAddress, port);
                     TimeUnit.MILLISECONDS.sleep(200);
                     sendFileStream(ipAddress, sendStreamPort, fileName);
+                    LOGGER.info("send stream to "+ipAddress+":"+port+" finished , file "+fileName+" ,fileSize= "+fileSize);
                 } else {
+                    System.err.println("send stream to " + ipAddress + ":" + port + "error,fileName: "+fileName+" ,fileSize= "+fileSize);
                     outputDataBuffer = "FAILED".getBytes();
                     sendDatagram(outputDataBuffer, ipAddress, port);
                 }
@@ -79,9 +82,7 @@ public class FileServer {
             fileOutputStream = new DataOutputStream(clientFileSocket.getOutputStream());
 
             byte[] fileBuffer = new byte[ConstantUtils.FILE_BUFFER_SIZE];
-
             int bytesRead;
-
             while ((bytesRead = fileInputStream.read(fileBuffer)) != -1) {
                 fileOutputStream.write(fileBuffer, 0, bytesRead);
             }

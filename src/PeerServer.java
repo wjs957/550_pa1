@@ -2,12 +2,41 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class PeerServer {
 
+//    private static Logger LOGGER = Logger.getLogger("peer_client");
+    private static void configureLogging() {
+        try {
+            // Set the log output format
+            System.setProperty("java.util.logging.SimpleFormatter.format",
+                    "[%1$tF %1$tT] [%4$-7s] %5$s %n");
 
+            // Create a log handler and output logs to a specified file
+            FileHandler fileHandler = new FileHandler("peer_server.log");
+
+            // Set the output format of the log processor
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+
+            // Obtain the root Logger and add a file handler
+            Logger rootLogger = Logger.getLogger("peer_server");
+            rootLogger.addHandler(fileHandler);
+
+
+//            FileHandler clientFileHandler = new FileHandler("peer_client.log");
+//            clientFileHandler.setFormatter(formatter);
+//            Logger clientLogger = Logger.getLogger("peer_client");
+//            clientLogger.addHandler(clientFileHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) throws IOException {
-
+        configureLogging();
         String peerId = UUID.randomUUID().toString();
         Thread peerClientThread = new Thread(new PeerClient(peerId));
         peerClientThread.start();
@@ -110,7 +139,7 @@ public class PeerServer {
                                 indexServerResponse = (IndexResponse) in.readObject();
 
                                 if (indexServerResponse.isSuc()) {
-                                    System.out.println((directoryEntity.getFileNames().size() - 1) + " files registered with indexing server. ");
+                                    System.out.println(directoryEntity.getFileNames().size() + " files registered with indexing server. ");
                                 } else {
                                     System.err.println("Unable to register files with server. Please try again later.");
                                 }
@@ -283,7 +312,7 @@ public class PeerServer {
         private String downloadFile(String fileHostAddress, Integer fileHostPort,String fileFullName,String fileName) throws Exception {
 
             FileReceiver fileReceiver = new FileReceiver();
-            return fileReceiver.receiveFile(fileFullName,fileName,fileHostAddress,fileHostPort);
+            return fileReceiver.receiveFile(fileFullName,fileName,fileHostAddress,fileHostPort,null);
         }
 
     }
