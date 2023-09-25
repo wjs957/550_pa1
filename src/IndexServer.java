@@ -16,19 +16,18 @@ public class IndexServer {
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     private final Lock rLock = rwLock.readLock();
     private final Lock wLock = rwLock.writeLock();
-    private static final int DEFAULT_SERVER_PORT=8080;
-    private static final int FILE_SERVER_DEFAULT_PORT=10000;
+
     private static final String PEER_KEY_FORMAT = "peer_key_Id:%s_ip:%s";
-    private static final int THREAD_POOL_SIZE = 1024;
+
     public static void main(String[] args) throws IOException {
-        new IndexServer().startServer(DEFAULT_SERVER_PORT);
+        new IndexServer().startServer(ConstantUtils.INDEX_SERVER_PORT);
     }
 
     public void startServer(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        ExecutorService workerThreadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-        System.out.println("The index service is started successfully. port: "+DEFAULT_SERVER_PORT);
-        while (true) {
+        ExecutorService workerThreadPool = Executors.newFixedThreadPool(ConstantUtils.THREAD_POOL_SIZE);
+        System.out.println("The index service is started successfully. port: "+ConstantUtils.INDEX_SERVER_PORT);
+        while(true) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 // 将客户端连接交给工作线程池处理
@@ -148,7 +147,7 @@ public class IndexServer {
                 filesStoreEntity = indexFilesStore.get(peerKeyStr);
                 filesStoreEntity.setAddTime(date);
                 filesStoreEntity.setFileServerAddress(peerAddress);
-                filesStoreEntity.setFileServerPort(FILE_SERVER_DEFAULT_PORT);
+                filesStoreEntity.setFileServerPort(ConstantUtils.FILE_SERVER_DEFAULT_PORT);
                 if(filesStoreEntity.getPathFilesMapping().containsKey(indexRegister.getFilePath())){
                     fileList = filesStoreEntity.getPathFilesMapping().get(indexRegister.getFilePath());
                     List<String> needAddList = new ArrayList<>();
@@ -178,7 +177,7 @@ public class IndexServer {
                 filesStoreEntity = new FilesStoreEntity();
                 filesStoreEntity.setAddTime(date);
                 filesStoreEntity.setFileServerAddress(peerAddress);
-                filesStoreEntity.setFileServerPort(FILE_SERVER_DEFAULT_PORT);
+                filesStoreEntity.setFileServerPort(ConstantUtils.FILE_SERVER_DEFAULT_PORT);
                 filesStoreEntity.setPeerId(indexRegister.getPeerId());
                 filesStoreEntity.setPathFilesMapping(new HashMap<>());
                 filesStoreEntity.getPathFilesMapping().put(indexRegister.getFilePath(),fileList);

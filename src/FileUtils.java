@@ -11,17 +11,8 @@ import java.util.List;
 public class FileUtils {
     private FileUtils(){}
 
-    /** transfer file byte buffer **/
-    public static final int File_Buffer_SIZE = 50 * 1024;
-
-    /** controller port  **/
-    public static final int File_PORT = 50000;
-
     /** mark transfer success **/
     public static final byte[] successData = "success data mark".getBytes();
-
-    /** mark transfer exit **/
-    public static final byte[] exitData = "exit data mark".getBytes();
 
     public static void main(String[] args) {
         byte[] b = new byte[]{1};

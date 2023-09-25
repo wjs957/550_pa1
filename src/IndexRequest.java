@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class IndexRequest implements Serializable {
     /**
      * Request type
-     * 1: register, 2: unregister, 3: lookup,
+     * 1: register, 2: unregister, 3: lookup, 4: exit
      */
     private Integer requestType;
 

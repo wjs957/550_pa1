@@ -5,10 +5,6 @@ import java.util.Arrays;
 
 public class FileReceiver {
 
-    private static final int FILE_STREAM_PORT = 10001;
-
-    private static final int FILE_BUFFER_SIZE = 4096;
-
     public String receiveFile(String fileFullName,String fileName, String ipAddress, int sockPort) throws IOException {
         DatagramSocket commandSocket = null;
         ServerSocket fileStreamListener = null;
@@ -19,12 +15,12 @@ public class FileReceiver {
         try {
             // Send command for requesting files
             commandSocket = new DatagramSocket();
-            byte[] outputDataBuffer = ("GET " + FILE_STREAM_PORT + " " + fileFullName + " ").getBytes();
+            byte[] outputDataBuffer = ("GET " + ConstantUtils.FILE_STREAM_PORT + " " + fileFullName + " ").getBytes();
             DatagramPacket outputPacket = new DatagramPacket(outputDataBuffer,
                     outputDataBuffer.length, InetAddress.getByName(ipAddress), sockPort);
             commandSocket.send(outputPacket);
 
-            byte[] inputDataBuffer = new byte[FILE_BUFFER_SIZE];
+            byte[] inputDataBuffer = new byte[ConstantUtils.FILE_BUFFER_SIZE];
             DatagramPacket inputPacket = new DatagramPacket(inputDataBuffer, inputDataBuffer.length);
             commandSocket.receive(inputPacket);
             String command = new String(Arrays.copyOf(inputPacket.getData(), inputPacket.getLength()));
@@ -41,7 +37,7 @@ public class FileReceiver {
             Path filePath = downloadPath.resolve(fileName);
 
             // Opening port for receiving file stream
-            fileStreamListener = new ServerSocket(FILE_STREAM_PORT);
+            fileStreamListener = new ServerSocket(ConstantUtils.FILE_BUFFER_SIZE);
             fileStreamSocket = fileStreamListener.accept();
 
             File downloadFile = filePath.toFile();
@@ -49,7 +45,7 @@ public class FileReceiver {
             // Receiving Data Stream
             fileInputStream = new DataInputStream(new BufferedInputStream(fileStreamSocket.getInputStream()));
             fileOutputStream = new DataOutputStream(new BufferedOutputStream(new BufferedOutputStream(new FileOutputStream(downloadFile))));
-            byte[] fileBuffer = new byte[FILE_BUFFER_SIZE];
+            byte[] fileBuffer = new byte[ConstantUtils.FILE_BUFFER_SIZE];
             int bytesRead;
 
             long totalBytesRead = 0;

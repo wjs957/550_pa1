@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class PeerServer {
-    private static final String DEFAULT_INDEX_SERVER_HOST = "127.0.0.1";
-    private static final String DEFAULT_INDEX_SERVER_PORT = "8080";
+
+
     public static void main(String[] args) throws IOException {
 
         String peerId = UUID.randomUUID().toString();
@@ -13,7 +13,7 @@ public class PeerServer {
         peerClientThread.start();
 
         //File Server
-        FileServer fileServer = new FileServer(FileServer.FILE_SERVER_DEFAULT_PORT);
+        FileServer fileServer = new FileServer(ConstantUtils.FILE_SERVER_DEFAULT_PORT);
         fileServer.startFileServer();
 
     }
@@ -40,7 +40,7 @@ public class PeerServer {
                 String serverAddress = input.readLine();
 
                 if(serverAddress.trim().length() == 0 || "\n".equals(serverAddress)) {
-                    serverAddress = DEFAULT_INDEX_SERVER_HOST;
+                    serverAddress = ConstantUtils.DEFAULT_INDEX_SERVER_HOST;
                 }
 
                 if(!IPAddressValidator.isValidIP(serverAddress)) {
@@ -48,10 +48,10 @@ public class PeerServer {
                     System.exit(0);
                 }
 
-                System.out.print("Enter Server PORT (The default PORT is 8080):");
+                System.out.print("Enter Server PORT (The default PORT is 9000):");
                 String serverPort = input.readLine();
                 if(serverPort.trim().length() == 0 || "\n".equals(serverPort)) {
-                    serverPort = DEFAULT_INDEX_SERVER_PORT;
+                    serverPort = String.valueOf(ConstantUtils.INDEX_SERVER_PORT);
                 }
 
                 peerClientSocket = new Socket(serverAddress, Integer.parseInt(serverPort));
@@ -60,9 +60,8 @@ public class PeerServer {
                 out.flush();
 
                 in = new ObjectInputStream(peerClientSocket.getInputStream());
-
-
                 indexServerResponse = (IndexResponse) in.readObject();
+
                 if(!indexServerResponse.isSuc()){
                     System.out.println("Connection failure.Address: "+serverAddress+",Port:"+serverPort);
                     System.exit(0);
@@ -71,6 +70,7 @@ public class PeerServer {
                 System.out.println("The PEER has established a connection with server "+serverAddress+":"+serverPort+" .");
 
                 while (true) {
+                    //Show the user different choices
                     System.out.println("\nPlease follow the prompts below to make your selection and enter the number!");
                     System.out.println("1.Register all its files with the indexing serve.");
                     System.out.println("2.Search the index and return all the matching.");
