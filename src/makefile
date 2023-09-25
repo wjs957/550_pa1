@@ -13,5 +13,9 @@ start_indexserver:
 start_peer:
 	java -classpath ../out/production/550_pa1 PeerServer
 
-run_evaluation:
+run_gfile:
+	java -classpath ../out/production/550_pa1 GenerateFiles
+
+run_gfile:
 	java -classpath ../out/production/550_pa1 TestClient
+

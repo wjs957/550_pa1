@@ -25,7 +25,10 @@ public class EvaluationAndMeasurement {
 
     public static void main(String[] args) {
         EvaluationAndMeasurement evaluation = new EvaluationAndMeasurement();
-       evaluation.runQueries(0);
+        
+        evaluation.runQueries(0);
+       
+       
         evaluation.runQueries(1);
         evaluation.runQueries(2);
         evaluation.runQueries(3);

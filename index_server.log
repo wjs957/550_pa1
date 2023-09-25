@@ -1,31 +1,8 @@
-[2023-09-25 08:48:32] [信息     ] The index service is started successfully. port: 8080 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_8.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_10.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_9.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_5.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_4.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_8.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_2.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_2.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_6.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_3.bin 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_1.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_1.bin 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_6.bin 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [信息     ] lookup file binary_gb_7.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_4.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_5.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_9.bin 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_10.bin 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_7.bin 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [严重     ] No file found, name:binary_gb_3.bin 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
-[2023-09-25 08:49:01] [信息     ] The client has requested that the connection be closed 
+[2023-09-25 09:44:18] [信息     ] The index service is started successfully. port: 8080 
+[2023-09-25 09:49:30] [信息     ] lookup file 2 
+[2023-09-25 09:49:30] [严重     ] No file found, name:2 
+[2023-09-25 09:49:53] [信息     ] lookup file text_kb_1.txt 
+[2023-09-25 09:49:53] [严重     ] No file found, name:text_kb_1.txt 
+[2023-09-25 09:50:01] [信息     ] Register path: file\,files.size: 11292 from Peer(127.0.0.1 ), peerId:58a5cb3f-b593-4d89-b237-441a2d625c92 
+[2023-09-25 09:50:01] [信息     ] The peer (ID:58a5cb3f-b593-4d89-b237-441a2d625c92, IP:127.0.0.1) sent 11292 files to the server.  
+[2023-09-25 09:54:25] [信息     ] server handleClient error,msg:Connection reset 
